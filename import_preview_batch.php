@@ -1,8 +1,5 @@
 <?php
-// Auto-generated preview batch importer. Safe to re-run (skips themes that already exist).
-if ( ! defined('WP_CLI') ) { echo "Must run via wp-cli
-"; exit(1); }
-
+if ( ! defined('WP_CLI') ) { echo 'Must run via wp-cli'; exit(1); }
 $themes = [];
 
 $themes[] = [
@@ -10,7 +7,7 @@ $themes[] = [
   'title' => 'Dinosaur Coloring Pages',
   'category' => 'Animals',
   'tint' => '#DCEEFB',
-  'intro' => 'Roar into fun with our dinosaur coloring pages! From friendly baby dinos to more detailed prehistoric designs, there's a page for every young paleontologist.',
+  'intro' => 'Roar into fun with our dinosaur coloring pages! From friendly baby dinos to more detailed prehistoric designs, there\'s a page for every young paleontologist.',
   'thumb_url' => 'https://raw.githubusercontent.com/jiaqinzhang/simple-coloring-pages-content/master/images/dinosaur_easy_letter.png',
   'pages' => [
     [ 'title' => 'Easy Dinosaur Coloring Page', 'alt' => 'Easy printable dinosaur coloring page for kids', 'thumb_url' => 'https://raw.githubusercontent.com/jiaqinzhang/simple-coloring-pages-content/master/images/dinosaur_easy_letter.png', 'png_url' => 'https://raw.githubusercontent.com/jiaqinzhang/simple-coloring-pages-content/master/images/dinosaur_easy_letter.png', 'pdf_url' => '' ],
@@ -147,28 +144,14 @@ $themes[] = [
 
 foreach ( $themes as $t ) {
     $existing = get_page_by_title( $t['title'], OBJECT, 'coloring_topic' );
-    if ( $existing ) {
-        echo "SKIP (exists): " . $t['title'] . "
-";
-        continue;
-    }
-    $post_id = wp_insert_post( [
-        'post_type'   => 'coloring_topic',
-        'post_title'  => $t['title'],
-        'post_status' => 'publish',
-    ] );
-    if ( is_wp_error( $post_id ) ) {
-        echo "ERROR creating " . $t['title'] . ": " . $post_id->get_error_message() . "
-";
-        continue;
-    }
+    if ( $existing ) { echo "SKIP (exists): " . $t['title'] . "
+"; continue; }
+    $post_id = wp_insert_post( [ 'post_type' => 'coloring_topic', 'post_title' => $t['title'], 'post_status' => 'publish' ] );
+    if ( is_wp_error( $post_id ) ) { echo "ERROR creating " . $t['title'] . ": " . $post_id->get_error_message() . "
+"; continue; }
     $term = term_exists( $t['category'], 'topic_category' );
-    if ( ! $term ) {
-        $term = wp_insert_term( $t['category'], 'topic_category' );
-    }
-    if ( ! is_wp_error( $term ) ) {
-        wp_set_post_terms( $post_id, [ (int) $term['term_id'] ], 'topic_category' );
-    }
+    if ( ! $term ) { $term = wp_insert_term( $t['category'], 'topic_category' ); }
+    if ( ! is_wp_error( $term ) ) { wp_set_post_terms( $post_id, [ (int) $term['term_id'] ], 'topic_category' ); }
     update_post_meta( $post_id, 'scp_thumb_url', $t['thumb_url'] );
     update_post_meta( $post_id, 'scp_tint', $t['tint'] );
     update_post_meta( $post_id, 'scp_intro', $t['intro'] );
