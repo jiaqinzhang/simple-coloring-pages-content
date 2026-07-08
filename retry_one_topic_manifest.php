@@ -20,10 +20,15 @@ $children = get_posts( array(
 	'order'          => 'ASC',
 ) );
 
+// Cache-bust: one of these files was recently overwritten on origin after
+// being served with a truncated body, and Cloudflare had already cached
+// the broken response (Cf-Cache-Status: HIT on the old 65536-byte file).
+// Appending a throwaway query string forces a fresh origin fetch.
+$cb = time();
 $pdf_urls = array();
 foreach ( $children as $c ) {
 	$url = get_post_meta( $c->ID, 'scp_pdf_url', true );
-	if ( $url ) $pdf_urls[] = $url;
+	if ( $url ) $pdf_urls[] = $url . '?cb=' . $cb;
 }
 
 $manifest = array( array(
