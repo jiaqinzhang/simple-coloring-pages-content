@@ -7,7 +7,7 @@
 if ( ! defined('WP_CLI') ) { echo 'Must run via wp-cli'; exit(1); }
 
 $uploads_base = 'https://simplecoloringpagesforkids.com/wp-content/uploads/2026/07';
-$results = json_decode( file_get_contents( '/content/repo/pdf_merge_result.json' ), true );
+$results = json_decode( file_get_contents( '/content/output/pdf_merge_result.json' ), true );
 
 $updated = 0;
 $errors = array();

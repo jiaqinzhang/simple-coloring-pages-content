@@ -14,8 +14,8 @@ import urllib.request
 
 from pypdf import PdfWriter
 
-MANIFEST = "/content/repo/pdf_merge_manifest.json"
-RESULT = "/content/repo/pdf_merge_result.json"
+MANIFEST = "/content/output/pdf_merge_manifest.json"
+RESULT = "/content/output/pdf_merge_result.json"
 OUT_DIR = "/var/www/html/wp-content/uploads/2026/07"
 TMP_DIR = "/tmp/pdfs"
 

@@ -41,7 +41,8 @@ foreach ( $topics as $t ) {
 	);
 }
 
-file_put_contents( '/content/repo/pdf_merge_manifest.json', json_encode( $manifest, JSON_PRETTY_PRINT ) );
+if ( ! is_dir( '/content/output' ) ) mkdir( '/content/output', 0777, true );
+file_put_contents( '/content/output/pdf_merge_manifest.json', json_encode( $manifest, JSON_PRETTY_PRINT ) );
 echo "Manifest written: " . count( $manifest ) . " topics\n";
 $total_pages = array_sum( array_map( function( $m ) { return count( $m['pdf_urls'] ); }, $manifest ) );
 echo "Total individual PDFs to merge: $total_pages\n";

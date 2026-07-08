@@ -13,8 +13,7 @@ if ( ! defined('WP_CLI') ) { echo 'Must run via wp-cli'; exit(1); }
 $VOWEL_SOUND_EXCEPTIONS = array( 'university', 'unicorn', 'unique', 'user', 'usual', 'european', 'one', 'once' );
 $SILENT_H_WORDS = array( 'hour', 'honest', 'honor' );
 
-function scp_check_text( $text, $field_label, $post_id, $post_title, &$issues ) {
-	global $VOWEL_SOUND_EXCEPTIONS, $SILENT_H_WORDS;
+function scp_check_text( $text, $field_label, $post_id, $post_title, &$issues, $VOWEL_SOUND_EXCEPTIONS, $SILENT_H_WORDS ) {
 	if ( ! $text || ! is_string( $text ) ) return;
 
 	// 1. Repeated word ("the the", "cute cute").
@@ -69,7 +68,7 @@ foreach ( $page_ids as $id ) {
 	$title = get_the_title( $id );
 	foreach ( $page_fields as $field ) {
 		$val = get_post_meta( $id, $field, true );
-		scp_check_text( $val, $field, $id, $title, $issues );
+		scp_check_text( $val, $field, $id, $title, $issues, $VOWEL_SOUND_EXCEPTIONS, $SILENT_H_WORDS );
 	}
 }
 echo "  checked " . count( $page_ids ) . " pages\n";
@@ -81,7 +80,7 @@ foreach ( $topic_ids as $id ) {
 	$title = get_the_title( $id );
 	foreach ( $topic_fields as $field ) {
 		$val = get_post_meta( $id, $field, true );
-		scp_check_text( $val, $field, $id, $title, $issues );
+		scp_check_text( $val, $field, $id, $title, $issues, $VOWEL_SOUND_EXCEPTIONS, $SILENT_H_WORDS );
 	}
 }
 echo "  checked " . count( $topic_ids ) . " topics\n";
@@ -100,5 +99,6 @@ foreach ( $by_type as $type => $items ) {
 	if ( count( $items ) > 10 ) echo "  ... and " . ( count( $items ) - 10 ) . " more\n";
 }
 
-file_put_contents( '/content/repo/english_scan_issues.json', json_encode( $issues, JSON_PRETTY_PRINT ) );
+if ( ! is_dir( '/content/output' ) ) mkdir( '/content/output', 0777, true );
+file_put_contents( '/content/output/english_scan_issues.json', json_encode( $issues, JSON_PRETTY_PRINT ) );
 echo "\nFull issue list written to english_scan_issues.json\n";
