@@ -71,8 +71,12 @@ foreach ( $files as $file ) {
 		update_post_meta( $topic_id, 'scp_age_range', $topic_data['age_range'] );
 
 		// Wipe any previously-imported children for this topic (safe re-run).
+		// post_status must be 'any' -- without it, get_posts() silently
+		// defaults to publish-only and leaves scheduled ("future") posts
+		// behind as orphaned duplicates on re-import.
 		$old_children = get_posts( array(
 			'post_type'      => 'coloring_page',
+			'post_status'    => 'any',
 			'posts_per_page' => -1,
 			'meta_key'       => 'scp_topic_id',
 			'meta_value'     => $topic_id,
